@@ -91,17 +91,21 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           script: |
             REPO_DIR="~/elibrary/projects/frontend-env"
-            ENV_DIR="~/elibrary/envs/frontend-env
+            ENV_DIR="~/elibrary/envs/frontend-env"
   
             if [ -d "$REPO_DIR" ]; then
+              echo "Pulling repo..."
               cd "$REPO_DIR"
               git reset --hard
               git pull
             else
+              echo "Cloning repo..."
               mkdir -p "$REPO_DIR"
               git clone https://github.com/ElectronicLibraryRT/frontend-env-docker-compose.git "$REPO_DIR"
               cd "$REPO_DIR"
             fi
+
+            echo "Copying .env files..."
   
             cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
             cp "$ENV_DIR/.env.minio" "$REPO_DIR/"
@@ -109,8 +113,12 @@ jobs:
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
 
+            echo "Setting env values..."
+            
             export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
-  
+
+            echo "Restarting docker compose..."
+          
             docker compose pull
             docker compose up -d --force-recreate
             docker image prune -f
