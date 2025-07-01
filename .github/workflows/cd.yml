@@ -89,7 +89,7 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       BACKEND_IMAGE: ${{ vars.BACKEND_IMAGE }}
     steps:
-      - name: Update repository
+      - name: Restart docker compose
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
