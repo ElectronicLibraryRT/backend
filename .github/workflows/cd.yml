@@ -41,6 +41,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          debug: true
           script: |
             REPO_DIR="~/elibrary/projects/production"
             ENV_DIR="~/elibrary/envs/production"
@@ -89,6 +90,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          debug: true
           script: |
             REPO_DIR="~/elibrary/projects/frontend-env"
             ENV_DIR="~/elibrary/envs/frontend-env"
