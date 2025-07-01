@@ -35,17 +35,20 @@ jobs:
       - name: Restart docker compose
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          REPO_DIR: "~/elibrary/projects/production"
+          ENV_DIR: "~/elibrary/envs/production"
+          BACKEND_IMAGE: ${{ vars.BACKEND_IMAGE }}
+          FRONTEND_IMAGE: ${{ vars.FRONTEND_IMAGE }}
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          debug: true
+          envs: REPO_DIR, ENV_DIR, DOCKERHUB_USERNAME, BACKEND_IMAGE, FRONTEND_IMAGE
           script: |
-            REPO_DIR="~/elibrary/projects/production"
-            ENV_DIR="~/elibrary/envs/production"
-  
+            set -euo pipefail
+            
             if [ -d "$REPO_DIR" ]; then
               echo "Pulling repo..."
               cd "$REPO_DIR"
@@ -54,27 +57,27 @@ jobs:
             else
               echo "Cloning repo..."
               mkdir -p "$REPO_DIR"
-              git clone https://github.com/ElectronicLibraryRT/production-docker-compose.git "$REPO_DIR"
+              git clone https://github.com/ElectronicLibraryRT/frontend-env-docker-compose.git "$REPO_DIR"
               cd "$REPO_DIR"
             fi
+            echo "✅ Repository updated"
 
             echo "Copying .env files..."
   
             cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
             cp "$ENV_DIR/.env.minio" "$REPO_DIR/"
+            cp "$ENV_DIR/.env.minio-init" "$REPO_DIR/"
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
 
-            echo "Setting env values..."
-            
-            export FRONTEND_IMAGE=${{ vars.FRONTEND_IMAGE }}
-            export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
-
+            echo "✅ .env files copied."
             echo "Restarting docker compose..."
-            
+          
             docker compose pull
             docker compose up -d --force-recreate
             docker image prune -f
+
+            echo "✅ Docker compose restarted"
     
   restart-compose-frontend-env:
     needs: tag-latest
@@ -92,7 +95,10 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
+          envs: REPO_DIR, ENV_DIR, DOCKERHUB_USERNAME, BACKEND_IMAGE
           script: |
+            set -euo pipefail
+            
             if [ -d "$REPO_DIR" ]; then
               echo "Pulling repo..."
               cd "$REPO_DIR"
@@ -104,15 +110,8 @@ jobs:
               git clone https://github.com/ElectronicLibraryRT/frontend-env-docker-compose.git "$REPO_DIR"
               cd "$REPO_DIR"
             fi
+            echo "✅ Repository updated"
 
-      - name: Copying env files
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
             echo "Copying .env files..."
   
             cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
@@ -120,17 +119,12 @@ jobs:
             cp "$ENV_DIR/.env.minio-init" "$REPO_DIR/"
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
-            
-      - name: Restart docker compose
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          port: ${{ secrets.SSH_PORT }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          script: |
+
+            echo "✅ .env files copied."
             echo "Restarting docker compose..."
           
             docker compose pull
             docker compose up -d --force-recreate
             docker image prune -f
+
+            echo "✅ Docker compose restarted"
