@@ -128,7 +128,9 @@ jobs:
 
             echo "✅ .env files copied."
             echo "🚀 Restarting docker compose..."
-          
+
+            chmod +x "$REPO_DIR/minio/init-minio.sh"
+            
             docker compose pull
             docker compose up -d --force-recreate
             docker image prune -f
