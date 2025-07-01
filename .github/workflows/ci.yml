@@ -1,12 +1,8 @@
 name: CI
 
 on:
-  push:
-    branches: [main, dev]
-    paths: ['**.java']
   pull_request:
     branches: [main, dev]
-    paths: ['**.java']
   workflow_dispatch:
 
 
