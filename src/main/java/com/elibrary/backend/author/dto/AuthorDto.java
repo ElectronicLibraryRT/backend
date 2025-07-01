@@ -8,7 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AuthorDTO {
+public class AuthorDto {
     private Integer id;
     private String name;
 }

@@ -1,7 +1,7 @@
 package com.elibrary.backend.author;
 
-import com.elibrary.backend.author.dto.AuthorDTO;
-import com.elibrary.backend.book.dto.BookDTO;
+import com.elibrary.backend.author.dto.AuthorDto;
+import com.elibrary.backend.book.dto.BookDto;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +21,12 @@ public class AuthorController {
     private final AuthorService authorService;
 
     @GetMapping("/authors")
-    public ResponseEntity<List<AuthorDTO>> getAuthors(
+    public ResponseEntity<List<AuthorDto>> getAuthors(
         @RequestParam(name = "starts_with", required = false) String startsWith,
         @RequestParam(defaultValue = "0", required = false) @Min(0) int offset,
         @RequestParam(defaultValue = "100", required = false) @Min(0) @Max(100) int limit
     ) {
-        List<AuthorDTO> authors = authorService.getFilteredAuthors(
+        List<AuthorDto> authors = authorService.getFilteredAuthors(
             startsWith,
             offset,
             limit
@@ -36,20 +36,20 @@ public class AuthorController {
     }
 
     @GetMapping("/authors/{author_id}")
-    public ResponseEntity<AuthorDTO> getAuthorById(@PathVariable("author_id") Integer author_id) {
-        AuthorDTO author = authorService.getAuthor(author_id);
+    public ResponseEntity<AuthorDto> getAuthorById(@PathVariable("author_id") Integer authorId) {
+        AuthorDto author = authorService.getAuthor(authorId);
         return ResponseEntity.ok(author);
     }
 
     @GetMapping("/authors/{author_id}/books")
-    public ResponseEntity<List<BookDTO>> getAuthorBooks(
-        @PathVariable("author_id") Integer author_id,
+    public ResponseEntity<List<BookDto>> getAuthorBooks(
+        @PathVariable("author_id") Integer authorId,
         @RequestParam(name = "starts_with", required = false) String startsWith,
         @RequestParam(defaultValue = "0", required = false) @Min(0) int offset,
         @RequestParam(defaultValue = "100", required = false) @Min(0) @Max(100) int limit
     ) {
-        List<BookDTO> books = authorService.getFilteredAuthorBooks(
-            author_id,
+        List<BookDto> books = authorService.getFilteredAuthorBooks(
+            authorId,
             startsWith,
             offset,
             limit

@@ -1,8 +1,8 @@
 package com.elibrary.backend.author;
 
-import com.elibrary.backend.author.dto.AuthorDTO;
+import com.elibrary.backend.author.dto.AuthorDto;
 import com.elibrary.backend.book.Book;
-import com.elibrary.backend.book.dto.BookDTO;
+import com.elibrary.backend.book.dto.BookDto;
 import com.elibrary.backend.shared.exceptions.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,11 +15,11 @@ import java.util.Optional;
 public class AuthorService {
     private final AuthorRepository authorRepository;
 
-    public List<AuthorDTO> getFilteredAuthors(String startsWith, int offset, int limit) {
+    public List<AuthorDto> getFilteredAuthors(String startsWith, int offset, int limit) {
         List<Author> authors = authorRepository.findAuthors(startsWith, offset, limit);
 
         return authors.stream()
-            .map(author -> AuthorDTO.builder()
+            .map(author -> AuthorDto.builder()
                 .id(author.getId())
                 .name(author.getName())
                 .build()
@@ -27,20 +27,20 @@ public class AuthorService {
             .toList();
     }
 
-    public AuthorDTO getAuthor(Integer authorId) {
+    public AuthorDto getAuthor(Integer authorId) {
         Optional<Author> authorOpt = authorRepository.findById(authorId);
         if (authorOpt.isEmpty()) {
             throw new ResourceNotFoundException("author", "id", authorId);
         }
 
         Author author = authorOpt.get();
-        return AuthorDTO.builder()
+        return AuthorDto.builder()
             .id(author.getId())
             .name(author.getName())
             .build();
     }
 
-    public List<BookDTO> getFilteredAuthorBooks(Integer authorId, String startsWith, int offset, int limit) {
+    public List<BookDto> getFilteredAuthorBooks(Integer authorId, String startsWith, int offset, int limit) {
         Optional<Author> authorOpt = authorRepository.findById(authorId);
         if (authorOpt.isEmpty()) {
             throw new ResourceNotFoundException("author", "id", authorId);
@@ -49,7 +49,7 @@ public class AuthorService {
         List<Book> books = authorRepository.findBooksByAuthorId(authorId, startsWith, offset, limit);
 
         return books.stream()
-            .map(book -> BookDTO.builder()
+            .map(book -> BookDto.builder()
                 .id(book.getId())
                 .title(book.getTitle())
                 .publicationDate(book.getPublicationDate())

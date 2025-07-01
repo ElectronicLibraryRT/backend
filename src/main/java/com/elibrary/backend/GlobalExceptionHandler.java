@@ -1,6 +1,6 @@
 package com.elibrary.backend;
 
-import com.elibrary.backend.shared.dto.ErrorDTO;
+import com.elibrary.backend.shared.dto.ErrorDto;
 import com.elibrary.backend.shared.exceptions.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -16,14 +16,14 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleAuthorNotFound(ResourceNotFoundException ex) {
+    public ResponseEntity<ErrorDto> handleAuthorNotFound(ResourceNotFoundException ex) {
         Map<String, Object> errorDetails = Map.of(
             "resource", ex.getResourceName(),
             "field", ex.getFieldName(),
             "value", ex.getFieldValue()
         );
 
-        ErrorDTO error = new ErrorDTO(
+        ErrorDto error = new ErrorDto(
             "RESOURCE_NOT_FOUND",
             ex.getMessage(),
             errorDetails
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorDTO> handleValidationException(ConstraintViolationException ex) {
+    public ResponseEntity<ErrorDto> handleValidationException(ConstraintViolationException ex) {
         Map<String, String> errors = new HashMap<>();
 
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
             errors.put(field, violation.getMessage());
         }
 
-        ErrorDTO error = new ErrorDTO(
+        ErrorDto error = new ErrorDto(
             "VALIDATION_ERROR",
             "Validation error of path parameters or body",
             errors
@@ -51,13 +51,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public ResponseEntity<ErrorDTO> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+    public ResponseEntity<ErrorDto> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
         String error = String.format("Invalid value '%s' for param '%s'",
             ex.getValue(),
             ex.getName());
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-            .body(new ErrorDTO(
+            .body(new ErrorDto(
                 "TYPE_MISMATCH",
                 error,
                 Map.of(
