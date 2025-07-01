@@ -78,5 +78,9 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Run Docker Compose tests
-      run: docker compose up --exit-code-from tests
+      run: |
+        export API_TESTS_IMAGE=${{ vars.API_TESTS_IMAGE }}
+        export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
+        
+        docker compose up --exit-code-from tests
         
