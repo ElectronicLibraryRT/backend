@@ -79,22 +79,20 @@ jobs:
   restart-compose-frontend-env:
     needs: tag-latest
     runs-on: ubuntu-latest
-
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      REPO_DIR: "~/elibrary/projects/frontend-env"
+      ENV_DIR: "~/elibrary/envs/frontend-env"
+      BACKEND_IMAGE: ${{ vars.BACKEND_IMAGE }}
     steps:
-      - name: Restart docker compose
-        env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      - name: Update repository
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.SSH_HOST }}
           port: ${{ secrets.SSH_PORT }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          debug: true
           script: |
-            REPO_DIR="~/elibrary/projects/frontend-env"
-            ENV_DIR="~/elibrary/envs/frontend-env"
-  
             if [ -d "$REPO_DIR" ]; then
               echo "Pulling repo..."
               cd "$REPO_DIR"
@@ -107,6 +105,14 @@ jobs:
               cd "$REPO_DIR"
             fi
 
+      - name: Copying env files
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
             echo "Copying .env files..."
   
             cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
@@ -114,11 +120,15 @@ jobs:
             cp "$ENV_DIR/.env.minio-init" "$REPO_DIR/"
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
-
-            echo "Setting env values..."
             
-            export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
-
+      - name: Restart docker compose
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
             echo "Restarting docker compose..."
           
             docker compose pull
