@@ -60,7 +60,6 @@ jobs:
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
   
-            export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
             export FRONTEND_IMAGE=${{ vars.FRONTEND_IMAGE }}
             export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
   
@@ -98,10 +97,10 @@ jobs:
   
             cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
             cp "$ENV_DIR/.env.minio" "$REPO_DIR/"
+            cp "$ENV_DIR/.env.minio-init" "$REPO_DIR/"
             cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
             cp "$ENV_DIR/.env.frontend" "$REPO_DIR/"
-  
-            export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME
+
             export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
   
             docker compose pull
