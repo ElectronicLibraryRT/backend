@@ -60,7 +60,7 @@ jobs:
             else
               echo "🚀 Cloning repo..."
               mkdir -p "$REPO_DIR"
-              git clone https://github.com/ElectronicLibraryRT/frontend-env-docker-compose.git "$REPO_DIR"
+              git clone https://github.com/ElectronicLibraryRT/production-docker-compose.git "$REPO_DIR"
               cd "$REPO_DIR"
             fi
             echo "✅ Repository updated"
