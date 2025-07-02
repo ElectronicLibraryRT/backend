@@ -17,7 +17,8 @@ public interface BookLocationRepository extends JpaRepository<BookLocation, Book
             "AND (:startsWith IS NULL OR " +
             "LOWER(e.name) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
             "ORDER BY bl.book_id, bl.extension_id " +
-            "OFFSET :offset LIMIT :limit"
+            "OFFSET :offset LIMIT :limit",
+        nativeQuery = true
     )
     List<BookLocation> findByBookId(
         @Param("bookId") Integer bookId,
