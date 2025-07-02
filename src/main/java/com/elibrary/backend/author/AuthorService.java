@@ -52,7 +52,7 @@ public class AuthorService {
             .map(book -> BookDto.builder()
                 .id(book.getId())
                 .title(book.getTitle())
-                .publicationDate(book.getPublicationDate())
+                .yearWritten(book.getYearWritten())
                 .build()
             )
             .toList();
