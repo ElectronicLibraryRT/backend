@@ -13,7 +13,7 @@ import java.util.Set;
     name = "books",
     uniqueConstraints = @UniqueConstraint(
         name = "books_unique",
-        columnNames = {"title", "publication_date"}
+        columnNames = {"title", "year_written"}
     )
 )
 @Getter
@@ -30,8 +30,8 @@ public class Book {
     @Column(nullable = false, length = 128)
     private String title;
 
-    @Column(name = "publication_date")
-    private LocalDate publicationDate;
+    @Column(name = "year_written")
+    private Short yearWritten;
 
     @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     @JoinTable(

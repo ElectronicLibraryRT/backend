@@ -1,8 +1,8 @@
 package com.elibrary.backend.book.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,5 +13,6 @@ import java.time.LocalDate;
 public class BookDto {
     private Integer id;
     private String title;
-    private LocalDate publicationDate;
+    @JsonProperty("year_written")
+    private Short yearWritten;
 }
