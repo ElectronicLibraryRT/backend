@@ -14,6 +14,7 @@ public interface GenreRepository extends JpaRepository<Genre, Integer> {
             "FROM genres " +
             "WHERE (:startsWith IS NULL OR " +
             "LOWER(name) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
+            "ORDER BY id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )
@@ -30,6 +31,7 @@ public interface GenreRepository extends JpaRepository<Genre, Integer> {
             "WHERE ba.genre_id = :genreId " +
             "AND (:startsWith IS NULL OR " +
             "LOWER(b.title) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
+            "ORDER BY b.id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )
