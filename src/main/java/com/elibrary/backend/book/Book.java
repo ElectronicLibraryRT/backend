@@ -1,11 +1,11 @@
 package com.elibrary.backend.book;
 
 import com.elibrary.backend.author.Author;
+import com.elibrary.backend.booklocation.BookLocation;
 import com.elibrary.backend.genre.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -49,4 +49,7 @@ public class Book {
         inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
     private Set<Genre> genres = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<BookLocation> booksLocations = new HashSet<>();
 }
