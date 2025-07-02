@@ -1,6 +1,7 @@
 package com.elibrary.backend.book;
 
 import com.elibrary.backend.author.Author;
+import com.elibrary.backend.genre.Genre;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -40,4 +41,12 @@ public class Book {
         inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private Set<Author> authors = new HashSet<>();
+
+    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+    @JoinTable(
+        name = "books_genres",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private Set<Genre> genres = new HashSet<>();
 }
