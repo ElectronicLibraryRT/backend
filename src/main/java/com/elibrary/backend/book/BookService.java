@@ -16,6 +16,7 @@ import com.elibrary.backend.shared.exceptions.ResourceNotFoundException;
 import com.elibrary.backend.booklocation.id.BookLocationId;
 import com.elibrary.backend.util.minio.MinioService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
@@ -26,7 +27,8 @@ import java.util.Optional;
 @Service 
 @RequiredArgsConstructor
 public class BookService {
-    private static final String STORAGE_PREFIX = "/storage";
+    @Value("${uriprefix.storage}")
+    private String storagePrefix;
 
     private final BookRepository bookRepository;
     private final ExtensionRepository extensionRepository;
@@ -153,13 +155,13 @@ public class BookService {
         try {
             URI uri = new URI(originalUrl);
 
-            String newPath = STORAGE_PREFIX + uri.getPath();
+            String newPath = storagePrefix + uri.getPath();
 
             return new URI(
-                uri.getScheme(),
-                uri.getUserInfo(),
-                uri.getHost(),
-                uri.getPort(),
+                null,
+                null,
+                null,
+                -1,
                 newPath,
                 uri.getQuery(),
                 uri.getFragment()
