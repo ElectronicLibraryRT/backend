@@ -14,6 +14,7 @@ import com.elibrary.backend.genre.Genre;
 import com.elibrary.backend.genre.dto.GenreDto;
 import com.elibrary.backend.shared.exceptions.ResourceNotFoundException;
 import com.elibrary.backend.booklocation.id.BookLocationId;
+import com.elibrary.backend.util.minio.MinioService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,6 +31,8 @@ public class BookService {
     private final BookRepository bookRepository;
     private final ExtensionRepository extensionRepository;
     private final BookLocationRepository bookLocationRepository;
+
+    private final MinioService minioService;
 
     public List<BookDto> getFilteredBooks(String startsWith, int offset, int limit) {
         List<Book> books = bookRepository.findBooks(startsWith, offset, limit);
@@ -136,7 +139,10 @@ public class BookService {
         }
 
         String location = bookLocationOpt.get().getLocation();
-        return new LocationDto(modifyUrl(location));
+
+        String url = minioService.getSharedLink(location);
+
+        return new LocationDto(modifyUrl(url));
     }
 
     private String modifyUrl(String originalUrl) {
