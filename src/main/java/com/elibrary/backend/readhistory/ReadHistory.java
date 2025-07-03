@@ -7,7 +7,7 @@ import com.elibrary.backend.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "read_history")
@@ -21,8 +21,8 @@ public class ReadHistory {
     @EmbeddedId
     private ReadHistoryId id;
 
-    @Column(name = "last_read_ts", nullable = false, columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT TIMESTAMP")
-    private OffsetDateTime lastReadTs;
+    @Column(name = "last_read_ts", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT TIMESTAMP")
+    private LocalDateTime lastReadTs;
 
     @ManyToOne
     @MapsId("userId")
