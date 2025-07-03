@@ -16,7 +16,7 @@ public interface FavouriteBookRepository extends JpaRepository<FavouriteBook, Fa
             "WHERE fb.user_id = :userId " +
             "AND (:startsWith IS NULL OR " +
             "LOWER(b.title) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
-            "ORDER BY bl.book_id, bl.extension_id " +
+            "ORDER BY fb.book_id, fb.extension_id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )
