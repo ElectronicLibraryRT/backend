@@ -16,7 +16,7 @@ public interface ReadHistoryRepository extends JpaRepository<ReadHistory, ReadHi
             "WHERE rh.user_id = :userId " +
             "AND (:startsWith IS NULL OR " +
             "LOWER(b.title) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
-            "ORDER BY bl.book_id, bl.extension_id " +
+            "ORDER BY rh.user_id, rh.book_id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )

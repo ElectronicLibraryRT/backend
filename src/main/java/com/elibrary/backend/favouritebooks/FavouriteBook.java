@@ -6,7 +6,7 @@ import com.elibrary.backend.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "favourite_books")
@@ -20,8 +20,8 @@ public class FavouriteBook {
     @EmbeddedId
     private FavouriteBookId id;
 
-    @Column(name = "added_ts", nullable = false, columnDefinition = "TIMESTAMPTZ DEFAULT CURRENT TIMESTAMP")
-    private OffsetDateTime addedTs;
+    @Column(name = "added_ts", nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT TIMESTAMP")
+    private LocalDateTime addedTs;
 
     @ManyToOne
     @MapsId("userId")

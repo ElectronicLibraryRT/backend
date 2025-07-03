@@ -4,7 +4,7 @@ import com.elibrary.backend.book.dto.BookDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,5 +15,5 @@ import java.time.OffsetDateTime;
 public class ReadHistoryDto {
     private BookDto book;
     @JsonProperty(value = "last_read_ts")
-    private OffsetDateTime lastReadTs;
+    private LocalDateTime lastReadTs;
 }
