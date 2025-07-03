@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "FROM users " +
             "WHERE (:startsWith IS NULL OR " +
             "LOWER(name) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
-            "ORDER BY id" +
+            "ORDER BY id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )
