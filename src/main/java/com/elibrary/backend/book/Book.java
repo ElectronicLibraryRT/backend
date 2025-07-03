@@ -2,7 +2,9 @@ package com.elibrary.backend.book;
 
 import com.elibrary.backend.author.Author;
 import com.elibrary.backend.booklocation.BookLocation;
+import com.elibrary.backend.favouritebooks.FavouriteBook;
 import com.elibrary.backend.genre.Genre;
+import com.elibrary.backend.readhistory.ReadHistory;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -52,4 +54,10 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookLocation> booksLocations = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReadHistory> readHistory = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FavouriteBook> favouriteBooks = new HashSet<>();
 }
