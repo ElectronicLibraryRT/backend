@@ -15,7 +15,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             "FROM books " +
             "WHERE (:startsWith IS NULL OR " +
             "LOWER(title) LIKE LOWER(CONCAT(:startsWith, '%'))) " +
-            "ORDER BY id" +
+            "ORDER BY id " +
             "OFFSET :offset LIMIT :limit",
         nativeQuery = true
     )
