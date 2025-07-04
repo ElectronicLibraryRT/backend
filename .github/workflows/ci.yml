@@ -80,4 +80,14 @@ jobs:
         export BACKEND_IMAGE=${{ vars.BACKEND_IMAGE }}
         
         docker compose up --exit-code-from api-tests
-        
+
+        exit_code=$?
+        if [ $exit_code -ne 0 ]; then
+            echo "Docker compose failed with exit code ${exit_code}\n"
+            echo "Backend logs\n"
+            docker compose logs backend
+            echo "API Tests logs\n"
+            docker compose logs api-tests
+        fi
+
+        exit $exit_code
