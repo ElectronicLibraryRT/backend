@@ -10,7 +10,6 @@ import lombok.*;
 @Table(name = "books_locations")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
