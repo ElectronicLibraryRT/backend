@@ -55,4 +55,10 @@ public class Book {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<BookLocation> booksLocations = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ReadHistory> readHistory = new HashSet<>();
+
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<FavouriteBook> favouriteBooks = new HashSet<>();
 }
