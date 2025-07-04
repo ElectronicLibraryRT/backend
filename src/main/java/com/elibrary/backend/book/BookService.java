@@ -112,7 +112,7 @@ public class BookService {
                     .name(bl.getExtension().getName())
                     .build()
                 )
-                .location(modifyUrl(bl.getLocation()))
+                .location(modifyUrl(minioService.getSharedLink(bl.getLocation())))
                 .build()
             )
             .toList();
@@ -155,17 +155,16 @@ public class BookService {
         try {
             URI uri = new URI(originalUrl);
 
-            String newPath = storagePrefix + uri.getPath();
-
-            return new URI(
+            URI newUri = new URI(
                 null,
                 null,
                 null,
                 -1,
-                newPath,
+                storagePrefix + uri.getPath(),
                 uri.getQuery(),
                 uri.getFragment()
-            ).toString();
+            );
+            return newUri.toString();
 
         } catch (URISyntaxException e) {
             return originalUrl;
