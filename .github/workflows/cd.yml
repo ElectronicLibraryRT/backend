@@ -76,6 +76,7 @@ jobs:
             echo "🚀 Restarting docker compose..."
           
             docker compose pull
+            docker compose down --volumes
             docker compose up -d --force-recreate
             docker image prune -f
 
@@ -130,6 +131,7 @@ jobs:
             chmod +x "$REPO_DIR/minio/init-minio.sh"
             
             docker compose pull
+            docker compose down --volumes
             docker compose up -d --force-recreate
             docker image prune -f
 
