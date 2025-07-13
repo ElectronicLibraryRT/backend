@@ -114,8 +114,8 @@ jobs:
   
       - name: Add tag latest to staged image
         run: |
-          STAGING_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.BACKEND_IMAGE }}:staging-${{ needs.build-and-push.outputs.sanitized_branch }}
-          STAGED_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.BACKEND_IMAGE }}:${{ needs.build-and-push.outputs.sanitized_branch }}
+          STAGING_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.BACKEND_IMAGE }}:staging-${{ needs.run-api-tests.needs.build-and-push.outputs.sanitized_branch }}
+          STAGED_IMAGE=${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.BACKEND_IMAGE }}:${{ needs.run-api-tests.needs.build-and-push.outputs.sanitized_branch }}
           docker pull $STAGING_IMAGE
           docker tag $STAGING_IMAGE $STAGED_IMAGE
           docker push $STAGED_IMAGE
