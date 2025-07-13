@@ -1,0 +1,72 @@
+name: CD Frontend Env
+
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: [dev]
+    types:
+      - completed
+  workflow_dispatch:
+
+
+jobs:
+  restart-compose-frontend-env:
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (
+        github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.event == 'push'
+      )
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      BACKEND_IMAGE: ${{ vars.BACKEND_IMAGE }}
+    steps:
+      - name: Restart docker compose
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: DOCKERHUB_USERNAME, BACKEND_IMAGE
+          script: |
+            set -euo pipefail
+
+            echo "🚀 Setting directory env variables..."
+            REPO_DIR="$HOME/elibrary/projects/frontend-env"
+            ENV_DIR="$HOME/elibrary/envs/frontend-env"
+            echo "✅ Envs set"
+            
+            if [ -d "$REPO_DIR" ]; then
+              echo "🚀 Pulling repo..."
+              cd "$REPO_DIR"
+              git reset --hard
+              git pull
+            else
+              echo "🚀 Cloning repo..."
+              mkdir -p "$REPO_DIR"
+              git clone https://github.com/ElectronicLibraryRT/frontend-env-docker-compose.git "$REPO_DIR"
+              cd "$REPO_DIR"
+            fi
+            echo "✅ Repository updated"
+
+            echo "🚀 Copying .env files..."
+  
+            cp "$ENV_DIR/.env.postgres" "$REPO_DIR/"
+            cp "$ENV_DIR/.env.minio" "$REPO_DIR/"
+            cp "$ENV_DIR/.env.minio-init" "$REPO_DIR/"
+            cp "$ENV_DIR/.env.backend" "$REPO_DIR/"
+
+            echo "✅ .env files copied."
+            echo "🚀 Restarting docker compose..."
+
+            chmod +x "$REPO_DIR/minio/init-minio.sh"
+            
+            docker compose pull
+            docker compose down --volumes
+            docker compose up -d --force-recreate
+            docker image prune -f
+
+            echo "✅ Docker compose restarted"
